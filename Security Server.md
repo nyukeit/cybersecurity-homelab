@@ -22,9 +22,11 @@ sudo adduser sec-user
 ```
 
 When prompted to add a new password, use our same password `@password123!`. We don't need to fill in any other information for the user.
-![[Screenshot from 2025-03-12 16-35-37.png]]
+
+![Password](Images/security_server_add_user_sec_user.png)
+
 ### Add `sec-user` to `sudo` group
-We do this so we can use eleviated privileges to run commands.
+We do this so we can use elevated privileges to run commands.
 ```bash
 sudo usermod -aG sudo sec-user
 ```
@@ -41,7 +43,7 @@ sec-user@sec-box:/home/janed$
 
 Let's change into our home directory, as that's where we will be running our commands to join Active Directory.
 ### Change Static IP
-Since we cloned this machine from another machine, this machine will have the Static IP that we configured for the other VM. Let's change the Static IP for this machine, which is `10.0.0.10`. Follow the exact same steps as we followed in [[Ubuntu Desktop 22.04#Static IP]]
+Since we cloned this machine from another machine, this machine will have the Static IP that we configured for the other VM. Let's change the Static IP for this machine, which is `10.0.0.10`. Follow the exact same steps as we followed in [Ubuntu Desktop 22.04 Static IP](./Ubuntu Desktop 22.04#StaticIP)
 ### New Account in Active Directory
 Follow the steps in [[Windows Server 2025#Active Directory Users]] to create a new account in AD. We will use these settings
 
@@ -51,10 +53,15 @@ Follow the steps in [[Windows Server 2025#Active Directory Users]] to create a n
 | password | `@password123!` |
 ### Change User Group in Active Directory
 Currently, this user is part of `Domain Users` group. We can see this when we right click and go to **Properties** of the user and then to the **Member of** tab.
-![[Screenshot from 2025-03-12 16-51-15.png]]
+
+![Member Of](Images/security_server_member_of_domain_users.png)
+
 Click on **Add**. In the section **Enter the object names to select**, type **Domain Admins** and click on **Check Names**. You will see that Domain Admins with an underline comes up.
-![[Screenshot from 2025-03-12 16-53-02.png]]
+
+![Add user to Domain Admins](Images/security_server_add_user_domain_admins.png)
+
 Click OK. We will see that the user has been added to the group **Domain Admins**. Click Apply and Ok to exit the windows.
+
 ### Join Active Directory
 Since this is a clone machine, our setup of joining the Active Directory Domain Controller has already been done. However, we need to clear the cache and rejoin as the new user.
 ```bash
@@ -67,7 +74,8 @@ sudo net ads join -U Administrator
 ```
 
 Enter the `CORP\Administrator` password to join the Domain Controller.
-![[Screenshot from 2025-03-12 16-56-30.png]]
+
+![Join Domain Controller](Images/security_server_joining_domain_controller.png)
 
 Restart `winbind` again. Use the command `wbinfo -u` to see the new user added.
 ### Login to Domain Controller
@@ -75,6 +83,8 @@ Restart `winbind` again. Use the command `wbinfo -u` to see the new user added.
 sudo login
 ```
 
-When prompted for `sec-box-login` use `CORP+sec-user` and password `@password123!`.![[Screenshot from 2025-03-12 16-59-48.png]]
+When prompted for `sec-box-login` use `CORP+sec-user` and password `@password123!`.
+
+![Joined Domain Controller](Images/security_server_domain_joined.png)
 
 We will create a snapshot here and call it `Sec server base + AD`.

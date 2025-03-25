@@ -16,37 +16,49 @@ We need to restart the network to be able to join the Active Directory server. S
 First, we have to set up a static IP address for this client. To do this, refer to this [[Windows Server 2025#Configure Static IP]]
 
 Here are the settings for this Windows client.
-![[Screenshot from 2025-03-05 12-51-18.png]]
+
+![Static IP Settings](Images/win_client_static_ipv4_settings.png)
 
 Now, to add this client to Active Directory, we will go back to **Control Panel**. In the search bar, search for **change work group**
-![[Screenshot from 2025-03-05 12-53-54.png]]
+
+![Change Workgroup](Images/win_client_change_workgroup.png)
+
 In the window that opens up, click on **Change**. In the subsequent window, we will see a random name assigned to our computer. We will change this to **pilgrimcorp-win-client**.
-![[Screenshot from 2025-03-05 12-55-34.png]]
+
+![New Workgroup](Images/win_client_change_client_name.png)
+
 And we will change the **Member of** from `Workgroup` to our AD Domain, which is **corp.pilgrimcorp-dc.com**.
-![[Screenshot from 2025-03-05 12-57-34.png]]
+
+![New Workgroup](Images/win_client_new_workgroup.png)
+
 When you click OK, there might be a warning dialog about a NetBIOS limitation, click OK.
-> [!warning] Domain Controller
+
+> **Domain Controller**
 > When we do this step, we need to ensure that our Win Server Domain Controller is running. If it isn't, our client will encounter an error.
 
 If everything is done correctly, we should see this screen.
-![[Screenshot from 2025-03-05 13-03-56.png]]
+
+![Join Workgroup Prompt](Images/win_client_join_workgroup_prompt.png)
+
 This is where we will input the User John Doe that we created earlier. For reference, we created the  user `johnd@corp.pilgrimcorp-dc.com` with the password `@password123!`
 
 If everything went smoothly, we should see this welcome dialog.
-![[Screenshot from 2025-03-05 13-06-46.png]]
+
+![Welcome Dialog](Images/win_client_workgroup_welcome_dialog.png)
+
 We need to restart the PC to apply the changes. When prompted, click on Restart Now.
 
 When the computer restarts, we will first see the default account that we had created while installing Windows, in this case, `pilgrimcorp-w-client`.
 
-![[Screenshot from 2025-03-05 13-09-53.png]]
-
 We will use the **Other User** option to sign in as our John Doe account.
-![[Screenshot from 2025-03-05 13-11-03.png]]
-> [!Note] Full Domain while Login
+
+![Login as John Doe](Images/win_client_other_user_john_doe.png)
+
+> **Full Domain while Login**
 > You DO NOT need to input the entire domain name to login to the domain. 
 
 Once we login, it will re-provision the settings like it did the first time for the local account and take us to the Windows desktop, but this time, as John Doe. We have successfully joined the client to the Active Directory Domain Controller server.
 
 At this point, we will also take a snapshot of this VM and once again, call it `base`.
 
-[[Windows Server 2025]] << Previous | Next >> [[Ubuntu Desktop 22.04]]
+[Windows Server 2025](./Windows Server 2025.md) << Previous | Next >> [Ubuntu Desktop 22.04](./Ubuntu Desktop 22.04.md)

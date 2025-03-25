@@ -24,12 +24,19 @@ sudo DEBIAN_PRIORITY=low apt install postfix
 ```
 
 We are using `DEBIAN_PRIORITY=low` to allow the installation to prompt us while installing. Hit `Enter` and press `y` when prompted. You will be presented with the **Postfix Configuration** screen.
-![[Screenshot from 2025-03-10 15-16-51.png]]
+
+![Postfix General Mail Configuration](../Images/email_svr_postfix_general_configuration.png)
+
 Keep the default selection and proceed. Next is the **System mail name**, if it is already input as `email-svr` leave it as it is and proceed.
-![[Screenshot from 2025-03-10 15-18-15.png]]
+
+![System mail name](../Images/email_svr_postfix_system_mail_name.png)
+
 Use the same name for root and postmaster mail.
-![[Screenshot from 2025-03-10 15-19-35.png]]
+
+![Root & Postmaster Mail](../Images/email_svr_postfix_root_postmaster_mail.png)
+
 Pass through the remaining steps without changing any values to finish the installation.
+
 ## Configuration
 ### Set the Ubuntu User's Mailbox
 This will define the default mailbox for the user.
@@ -140,8 +147,11 @@ sudo systemctl restart postfix
 ## Add the SMTP Record in Domain Controller
 In the Domain Controller, go to **Server Manager** > **Tools** > **DNS**.
 Click on the server then **Forward Lookup Zones** and then our right click Domain **corp.pilgrimcorp-dc.com**
+
 Click on **New Host (A or AAAA)** and use these settings
-![[Screenshot from 2025-03-10 18-24-42.png]]
+
+![STMP Settings in Domain Controller](../Images/email_svr_postfix_dc_smtp_settings.png)
+
 ## Create the Maildir Directory
 Let's create the `Maildir` directory in the home folder of the user. Make sure you are in the Home folder using `pwd` command.
 
@@ -164,10 +174,12 @@ email-svr@smtp:~$ s-nail
 ```
 
 As we can see, we have 1 email
-![[Screenshot from 2025-03-10 18-31-32.png]]
+
+![Email Received](../Images/email_svr_postfix_mail_received.png)
 
 Type 1 next to the question mark (meaning the number of the email you want to see) and press `Enter` to see the email like you are used to seeing.
-![[Screenshot from 2025-03-10 18-32-39.png]]
+
+![Email received in Detail](../Images/email_svr_postfix_mail_received_detail.png)
 
 We have verified that our email configuration works correctly. Let's delete the test email as it is not necessary.
 ```bash
@@ -189,6 +201,7 @@ email-svr@smtp:~$ cat ~/text_message | s-nail -s 'Test Message' -r janed@corp.pi
 ```
 
 Now if we check s-nail again, we should have 1 email but sent from `janed`.
-![[Screenshot from 2025-03-10 18-42-06.png]]
+
+![Jane D as mail sender](../Images/email_svr_postfix_mail_from_janed.png)
 
 This completes our entire Postfix setup. And here we will take another snapshot. and call it `base+postfix`.

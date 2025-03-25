@@ -4,7 +4,7 @@ To install Wazuh, use the following command. This will install both `server` and
 curl -sO https://packages.wazuh.com/4.9/wazuh-install.sh && sudo bash ./wazuh-install.sh -a -i
 ```
 
-> [!Warning] Storage Size
+> **Storage Size**
 > Wazuh needs a lot of storage to function. Make sure your VM is at least 75 Gb
 
 Once installation finishes, take note of the username and password. You can create a new file in your home directory and paste the password there.
@@ -19,30 +19,35 @@ Firefox will show a **Warning: Potential Security Risk Ahead**. This is because 
 You will see a Wazuh loading screen and eventually you'll end up on the login screen. Use the user and password we noted earlier from the terminal.
 
 Once logged in, Wazuh will make a few checks and then show the dashboard like so.
-![[Screenshot from 2025-03-14 14-11-25.png]]
+
+![Wazuh Dashboard](Images/wazuh_dashboard.png)
 
 We now have the central dashboard and server of Wazuh setup. In order to get data from other computers into here, we need to install Wazuh agents in each of them so they can log the data and send it over to our central server.
 
 Wazuh will then aggregate all the data, parse it, normalize it and make it human readable for us.
 ## Deploy Wazuh Agents
 Go to the Wazuh dashboard and on the left side click on the menu and go to **Server Management** and click on the first item, **Endpoints Summary**
-![[Screenshot from 2025-03-14 14-16-38.png]]
+
+![Wazuh no agents](Images/wazuh_no_agents.png)
 
 You will see a page like this where there is a **Deploy new agent** button. Click on it. 
 
 ### Wazuh Windows Agent
 We will start with Windows first.
-![[Screenshot from 2025-03-14 14-21-44.png]]
+
+![Wazuh Deploy new agent Windows](Images/wazuh_deploy_new_agent_windows.png)
 
 Click on **MSI 32/64 bits** which should be the in the middle box titled Windows.
 
 In the **Assign a server address**, input the IP `10.0.0.10` which is our `sec-box` IP. In the **Assign an agent name**, we will use the respective hostname of our machine, `pilgrimcorp-win-client`.
-![[Screenshot from 2025-03-14 14-22-34.png]]
+
+![Wazuh New Agent Windows Settings](Images/wazuh_new_agent_windows_settings.png)
 
 Finally, from the group selection, click on the dropdown and select **Default**.
 
 Once we do everything, a PowerShell query will have been generated for us. 
-![[Screenshot from 2025-03-14 14-23-53.png]]
+
+![Wazuh new agent Windows PowerShell queries](Images/wazuh_new_agent_windows_powershell_queries.png)
 
 ```powershell
 Invoke-WebRequest -Uri https://packages.wazuh.com/4.x/windows/wazuh-agent-4.9.2-1.msi -OutFile $env:tmp\wazuh-agent; msiexec.exe /i $env:tmp\wazuh-agent /q WAZUH_MANAGER='10.0.0.10' WAZUH_AGENT_GROUP='default' WAZUH_AGENT_NAME='pilgrimcorp-win-client'
@@ -55,7 +60,8 @@ In the bottom search bar, search for **PowerShell**, right click on it and click
 In the UAC screen, input the credentials of our CORP Administrator account. PowerShell will now be started with admin privileges.
 
 Paste the above command and press `Enter`
-![[Screenshot from 2025-03-14 14-46-07.png]]
+
+![Wazuh Agent installing on Windows](Images/wazuh_new_agent_windows_installing.png)
 
 Once the installation is done, we will start the Wazuh service.
 ```PowerShell
@@ -65,7 +71,8 @@ NET START WazuhSvc
 PowerShell will output that the `Wazuh service was started successfully`.
 
 Now, we can go back to our Wazuh dashboard in the sec box and see the new agent added.
-![[Screenshot from 2025-03-14 14-49-30.png]]
+
+![Wazuh windows agent connected](Images/wazuh_windows_agent_connected.png)
 
 Take a snapshot of the `win-client` VM and add `+wazuh-agent` in the name and power off the client. Now, we will repeat this for the Ubuntu client.
 ### Wazuh Ubuntu Agent
@@ -86,7 +93,8 @@ sudo systemctl start wazuh-agent
 ```
 
 Once we input all these three commands, we will go back to our Wazuh Dashboard to see our new Linux client being added in the agents list.
-![[Screenshot from 2025-03-14 15-13-45.png]]
+
+![Wazuh linux agent connected](Images/wazuh_linux_agent_connected.png)
 
 Once again, take a snapshot.
 
@@ -97,7 +105,9 @@ Invoke-WebRequest -Uri https://packages.wazuh.com/4.x/windows/wazuh-agent-4.9.2-
 ```
 
 And once again, we can see our Windows Server machine, our Domain Controller, in the agents list.
-![[Screenshot from 2025-03-14 15-21-24.png]]
+
+![Wazuh domain controller connecte](Images/wazuh_domain_controller_connected.png)
+
 ## Change the `default` Groups
 Groups can help us streamline and gather various agents based on characteristics. In a real world scenario, these could be groups based on department or location, etc.
 
@@ -112,7 +122,8 @@ Select the correct OS for each agent and save it. Be sure to remove the `default
 Now we will apply specific configurations to each group in order to gather data specific to that particular OS. To do this, we need to work with the `agent.conf` file which will act as our central point to distribute the configuration to all our agents.
 ### Windows Group Conf
 Go to **Menu** > **Endpoint Groups** > **Windows** > **Files**
-![[Screenshot from 2025-03-14 15-33-06.png]]
+
+![Wazuh Group Configuration Windows](Images/wazuh_group_conf_windows.png)
 
 Click on the little pencil for the `agent.conf` file and add the following configuration just below the `<!-- Shared Agent configuration here -->` line.
 
@@ -155,6 +166,6 @@ We can now to go to **Menu** > **Explore** > **Discover** and we can already see
 > [!Note]
 > If your other two machines were powered off, you will need to power them back on to start receiving logs from them.
 
-![[Screenshot from 2025-03-14 15-47-34.png]]
+![Wazuh Logs stream](Images/wazuh_logs_stream.png)
 
 Let's take a snapshot here.

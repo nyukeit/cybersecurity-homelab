@@ -15,13 +15,15 @@ In the first screen, select `Yes` and continue.
 
 Enter the `hostname` as `pilgrimcorp-sec-def` and continue.
 
-In the NIC selection screen, our ethernet card must already be selected. Just go to OK and continue.
+In the NIC selection screen, our Ethernet card must already be selected. Just go to OK and continue.
 ### Static IP
 In the next screen, Security Onion will ask about the management interface. Here, we will select `STATIC Set a static IPv4 address (recommneded)`.
-![[Screenshot from 2025-03-11 10-08-12.png]]
+
+![Set Static IP During Installation](/home/nyukeit/Documents/Homelab/Images/security_onion_installation_set_static_ip.png)
 
 Based on our IP schema from the [[Learning/Cybersecurity/Homelab/Intro|Intro]], we will use this IP Address
-![[Screenshot from 2025-03-11 10-09-41.png]]
+
+![IP Address to use](/home/nyukeit/Documents/Homelab/Images/security_onion_installation_ip_address.png)
 
 For the default gateway, we will use the IP `10.0.0.1`
 
@@ -33,18 +35,19 @@ In the next screen, Security Onion asks whether we want to join an existing grid
 
 To load the GUI, we will reboot the VM.
 ```bash
-[pilgrimcorp-sec-def@localhost ~]$ reboot
+reboot
 ```
 
 Once the system has rebooted, we should see the login screen like this
-![[Screenshot from 2025-03-11 10-15-24.png]]
+![Security Onion Post Install Login Screen](Images/security_onion_post_install_login_screen.png)
 
 Let's login and then we need to set the `root` password. To do this, we will open the **Terminal**
 ```bash
-[pilgrimcorp-sec-def@pilgrimcorp-sec-def ~]$ sudo passwd root
+sudo passwd root
 ```
 
 First it will ask for your local password to continue. Input `@password123!` and then for the new password for the user `root`, we will use the same password again.
-![[Screenshot from 2025-03-11 10-19-53.png]]
+
+![Security Onion set root password](Images/security_onion_set_root_password.png)
 
 We can exit the terminal and we are ready to take a snapshot of this defensive setup and call it `base`.
